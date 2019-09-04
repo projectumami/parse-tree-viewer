@@ -154,13 +154,6 @@ public class App extends Application {
 
         Pane root = new Pane();
         root.getChildren().addAll(r, r2);
-                // RED, opacity 0.3
-//                new Rectangle(50, 50), // , Color.rgb(255, 0, 0, 0.3)),
-                // GREEN, opacity 0.3
-//                new Rectangle(100, 100), // , Color.hsb(120, 1.0, 1.0, 0.3)),
-                // BLUE, opacity 0.3
-//                new Rectangle(50, 50) // , Color.web("0x0000FF", 0.3))
-//        );
 
         Scene scene = new Scene(root, 500, 500);
 
