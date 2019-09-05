@@ -105,10 +105,14 @@ import java.io.IOException;
 public class App extends Application {
 
     private static Scene scene;
+    private int sceneWidth;
+    private int sceneHeight;
 
     @Override
     public void start(Stage primaryStage)
     {
+        sceneWidth = 500;
+        sceneHeight = 500;
 /*
         ArcTo arcTo = new ArcTo(); // ArcTo is set separately due to its complexity
         arcTo.setRadiusX(250);
@@ -155,7 +159,7 @@ public class App extends Application {
         Pane root = new Pane();
         root.getChildren().addAll(r, r2);
 
-        Scene scene = new Scene(root, 500, 500);
+        Scene scene = new Scene(root, sceneWidth, sceneHeight);
 
         primaryStage.setTitle("Color Demo");
         primaryStage.setScene(scene);
