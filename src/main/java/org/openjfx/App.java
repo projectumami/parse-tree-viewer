@@ -113,7 +113,7 @@ public class App extends Application {
     public void start(Stage primaryStage)
     {
         sceneWidth = 1000;
-        sceneHeight = 1000;
+        sceneHeight = 500;
 /*
         ArcTo arcTo = new ArcTo(); // ArcTo is set separately due to its complexity
         arcTo.setRadiusX(250);
@@ -146,18 +146,20 @@ public class App extends Application {
  */
         Pane root = new Pane();
 
-        float rowInterval = sceneHeight / 25;
-        float columnInterval = sceneWidth / 25;
+        int numRows = 7;
+        int numColumns = 25;
+        float rowInterval = sceneHeight / numRows;
+        float columnInterval = sceneWidth / numColumns;
 
-        for (int column = 0; column < 25; column++)
+        for (int column = 0; column < numColumns; column++)
         {
-            for (int row = 0; row < 25; row++)
+            for (int row = 0; row < numRows; row++)
             {
                 Rectangle r = new Rectangle();
-                r.setX(column * columnInterval - columnInterval / 2);
-                r.setY(row * rowInterval - rowInterval / 2);
-                r.setWidth(columnInterval / 2);
-                r.setHeight(rowInterval / 2);
+                r.setX(column * columnInterval /* + columnInterval / 2 */);
+                r.setY(row * rowInterval /* - rowInterval / 2 */);
+                r.setWidth(((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f);
+                r.setHeight(((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f);
                 r.setArcWidth(20);
                 r.setArcHeight(20);
                 r.setFill(Color.rgb(0, 0, 255, 1.0));
