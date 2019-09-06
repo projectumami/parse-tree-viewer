@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2a454922-0eb3-4722-8833-3bfc56ccd402" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/openjfx/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/openjfx/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -49,11 +49,11 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1073" />
-    <option name="y" value="56" />
-    <option name="width" value="1321" />
-    <option name="height" value="1321" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-2757" />
+    <option name="y" value="73" />
+    <option name="width" value="1982" />
+    <option name="height" value="1982" />
   </component>
   <component name="ProjectView">
     <navigator currentView="Scope" currentSubView="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope" proportions="" version="1">
@@ -99,18 +99,17 @@
       <workItem from="1567524321821" duration="6737000" />
       <workItem from="1567582704514" duration="725000" />
       <workItem from="1567616399493" duration="1229000" />
-      <workItem from="1567790763124" duration="1808000" />
+      <workItem from="1567790763124" duration="2625000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10499000" />
+    <option name="totallyTimeSpent" value="11316000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
-    <editor active="true" />
+    <frame x="-3118" y="49" width="1321" height="1321" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13791732" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27517843" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -127,7 +126,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.25643024" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.27670312" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
