@@ -1,103 +1,28 @@
 package org.openjfx;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.CubicCurve;
-import javafx.scene.shape.Ellipse;
-import javafx.stage.Stage;
-
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Polyline;
-import javafx.scene.shape.QuadCurve;
-import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-
-import javafx.application.Application;
-import static javafx.application.Application.launch;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcTo;
-import javafx.scene.shape.ClosePath;
-import javafx.scene.shape.HLineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.SVGPath;
-import javafx.scene.shape.VLineTo;
-import javafx.stage.Stage;
-
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
-
-import javafx.application.Application;
-import static javafx.application.Application.launch;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ClosePath;
 import javafx.scene.shape.HLineTo;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
-import javafx.scene.shape.StrokeLineJoin;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeLineJoin;
-import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 /**
  * JavaFX App
@@ -108,10 +33,27 @@ public class App extends Application {
     private int sceneWidth;
     private int sceneHeight;
 
-
     @Override
     public void start(Stage primaryStage)
-    {
+    {    	
+    	ObjectMapper mapper = new ObjectMapper();
+    	
+    	try
+    	{
+	    	InputStream fileInputStream = new FileInputStream("C:\\ProjectUmami\\data\\tree.json");
+	    	List<TreeTableNode> treeTableNodes = Arrays.asList(mapper.readValue(fileInputStream, TreeTableNode[].class));
+	    	fileInputStream.close();
+	    	
+	    	for (TreeTableNode treeTableNode : treeTableNodes)
+	    	{
+	    		System.out.println(treeTableNode.toString());
+	    	}
+    	}
+    	catch (Exception e)
+    	{
+    		e.printStackTrace();
+    	}    	
+    	
         sceneWidth = 1000;
         sceneHeight = 500;
 /*
