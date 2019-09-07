@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,16 +44,82 @@ public class App extends Application {
 	    	InputStream fileInputStream = new FileInputStream("C:\\ProjectUmami\\data\\tree.json");
 	    	List<TreeTableNode> treeTableNodes = Arrays.asList(mapper.readValue(fileInputStream, TreeTableNode[].class));
 	    	fileInputStream.close();
-	    	
+	    
 	    	for (TreeTableNode treeTableNode : treeTableNodes)
 	    	{
 	    		System.out.println(treeTableNode.toString());
 	    	}
+	    	
+	    	LinkedHashMap<Integer, Integer> maxChildNodesByLevel = new LinkedHashMap<Integer, Integer>();
+	    	
+	    	int previousLevel = 0;
+	    	int currentLevel = 1;
+	    	
+	    	LinkedHashMap<Integer, Integer> childNodesByParent = new LinkedHashMap<Integer, Integer>();
+	    	
+	    	for (TreeTableNode node : treeTableNodes)
+	    	{ 
+	    		if (node.getLevel() > 0) 
+	    		{
+	    			currentLevel = node.getLevel();
+	    			
+	    			System.out.print("Current Level = " + currentLevel);
+	    			
+		    		if (previousLevel != currentLevel)
+		    		{
+		    			System.out.println();
+		    			
+		    			previousLevel = currentLevel;
+		    			
+		    			int maxNodes = 0;
+		    			
+		    			// Find the max child count in the current level.
+		    			for (Integer numNodes : childNodesByParent.values())
+		    			{
+		    				if (numNodes > maxNodes)
+		    				{
+		    					maxNodes = numNodes;
+		    				}
+		    			}
+		    			
+		    			System.out.println(" Max Child Nodes = " + maxNodes);
+		    			
+		    			maxChildNodesByLevel.put(currentLevel, maxNodes);
+		    			
+		    			childNodesByParent = new LinkedHashMap<Integer, Integer>();	    			
+		    		}
+	    				
+		    		Integer parent = childNodesByParent.get(node.getParentId());
+		    		
+		    		System.out.println(" parent = " + parent + " node.getParentId() " + node.getParentId());
+		    		
+		    		if (parent == null)
+		    		{
+		    			childNodesByParent.put(node.getParentId(), 0);
+		    		}
+		    		else
+		    		{
+		    			int numChildren = childNodesByParent.get(node.getParentId());
+		    			
+		    			childNodesByParent.put(node.getParentId(), numChildren + 1);
+		    			System.out.println("Changing " + node.getParentId() + " from " + numChildren + " to " + (numChildren + 1));
+		    		}
+	    		}
+	    	}
+	    	
+	    	for (Integer key : maxChildNodesByLevel.keySet())
+	    	{
+	    		System.out.println("Key: " + key + " Value: " + maxChildNodesByLevel.get(key));	    		
+	    	}
+	    	
+
     	}
     	catch (Exception e)
     	{
     		e.printStackTrace();
     	}    	
+    	
+    	
     	
         sceneWidth = 1000;
         sceneHeight = 500;
