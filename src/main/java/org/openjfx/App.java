@@ -63,7 +63,7 @@ public class App extends Application {
 	    		{
 	    			currentLevel = node.getLevel();
 	    			
-	    			System.out.print("Current Level = " + currentLevel);
+	    			System.out.println("Current Level = " + currentLevel);
 	    			
 		    		if (previousLevel != currentLevel)
 		    		{
@@ -82,7 +82,7 @@ public class App extends Application {
 		    				}
 		    			}
 		    			
-		    			System.out.println(" Max Child Nodes = " + maxNodes);
+		    			System.out.println(" Max Child Nodes of level " + currentLevel + "=" + maxNodes);
 		    			
 		    			maxChildNodesByLevel.put(currentLevel, maxNodes);
 		    			
@@ -95,7 +95,7 @@ public class App extends Application {
 		    		
 		    		if (parent == null)
 		    		{
-		    			childNodesByParent.put(node.getParentId(), 0);
+		    			childNodesByParent.put(node.getParentId(), 1);
 		    		}
 		    		else
 		    		{
