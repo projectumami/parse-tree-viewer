@@ -173,22 +173,30 @@ public class App extends Application
 	                text.setX(x);
 	                text.setY(y + height * 0.75f);
 	                text.setFill(Color.BEIGE);
-	                
 	                Group textGroup = new Group(text);	                
+	                
+	                Text textData = new Text();
+	                textData.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
+	                textData.setText(node.getData());
+	                textData.setX(x);
+	                textData.setY(y + height * 0.75f);
+	                textData.setFill(Color.GREEN);
+	                textData.setRotate(90.0f);
+	                Group textDataGroup = new Group(textData);	              	               	              	             
 	                
 	                if (node.getData().compareTo("<epsilon>") == 0)
 	                {
-	                	r.setFill(Color.rgb(0, 0, 0, 1.0));
+	                	r.setFill(Color.rgb(0, 0, 0, 0.95));
 	                }
 	                else
 	                {
 	                	if (node.getNumChildren() == 0)
 	                	{
-	                		r.setFill(Color.rgb(255, 0, 0, 1.0));
+	                		r.setFill(Color.rgb(255, 0, 0, 0.95));
 	                	}
 	                	else
 	                	{
-	                		r.setFill(Color.rgb(0, 0, 255, 1.0));	                		
+	                		r.setFill(Color.rgb(0, 0, 255, 0.95));	                		
 	                	}
 	                }
 
@@ -196,6 +204,7 @@ public class App extends Application
 	                root.getChildren().add(lineGroup);
 
 	                root.getChildren().add(textGroup);
+	                root.getChildren().add(textDataGroup);
 	                //line.toBack();
 	                lineGroup.toBack();
 	                
