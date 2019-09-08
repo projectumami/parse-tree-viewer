@@ -34,393 +34,180 @@ import javafx.stage.Stage;
  */
 public class App extends Application 
 {
-    private static Scene scene;
-    private int sceneWidth;
-    private int sceneHeight;
-    private HashMap<Integer, LocationNode> locations = new HashMap<Integer, LocationNode>();
+	private static Scene scene;
+	private int sceneWidth;
+	private int sceneHeight;
+	private HashMap<Integer, LocationNode> locations = new HashMap<Integer, LocationNode>();
 
-    @Override
-    public void start(Stage primaryStage)
-    {    	
-    	ObjectMapper mapper = new ObjectMapper();
-    	
-        sceneWidth = 1250;
-        sceneHeight = 1250;
-        List<TreeTableNode> treeTableNodes = null;
-        
-    	try
-    	{
-	    	InputStream fileInputStream = new FileInputStream("C:\\ProjectUmami\\data\\tree.json");
-	    	treeTableNodes = Arrays.asList(mapper.readValue(fileInputStream, TreeTableNode[].class));
-	    	fileInputStream.close();
-	  	    	
-	    	for (TreeTableNode treeTableNode : treeTableNodes)
-	    	{
-	    		System.out.println(treeTableNode.toString());
-	    	}
-    	}
-    	catch (Exception e)
-    	{
-    		e.printStackTrace();
-    	}  
-	    
-    	int previousLevel = -1;
-    	int numLevels = 0;
-    	int maxColumns = 0;
-    	
-    	int columns = 0;
-    	
-    	for (TreeTableNode node : treeTableNodes)
-    	{ 
-    		numLevels = node.getLevel();    		
-    			
-	    	if (previousLevel != numLevels)
-	    	{    	
-	    		previousLevel = numLevels;
-	    		
-	    		if (columns > maxColumns)
-	    		{
-	    			maxColumns = columns;
-	    		}
-	    		
-	    		columns = 0;
-	    	}
-	    	else
-	    	{
-	    		columns++;
-	    	}
-    	}
-	    	
-        Pane root = new Pane();
-        int border = 10;
-        
-//        int numColumns = 50;
-        float rowInterval = sceneHeight / (numLevels + 1);
-        float columnInterval = sceneWidth / (maxColumns + 1);
-        
-//	    	LinkedHashMap<Integer, Integer> maxChildNodesByLevel = new LinkedHashMap<Integer, Integer>();
-	    	
-	    	previousLevel = -1;
-	    	int currentLevel = 0;
-	    	
-//	    	LinkedHashMap<Integer, Integer> childNodesByParent = new LinkedHashMap<Integer, Integer>();
-	    	
-//	    	int row = 0;
-	    	int column = 0;
-	    	
-	    	for (TreeTableNode node : treeTableNodes)
-	    	{ 
-//	    		if (node.getLevel() > 0) 
-//	    		{
-	    			currentLevel = node.getLevel();
-	    			
-//	    			System.out.println("Current Level = " + currentLevel);
-	    			
-		    		if (previousLevel != currentLevel)
-		    		{
-		    			column = 0;
-//		    			System.out.println();
-		    			
-		    			previousLevel = currentLevel;
-		    			
-//		    			int maxNodes = 0;
-		    			
-		    			// Find the max child count in the current level.
-//		    			for (Integer numNodes : childNodesByParent.values())
-//		    			{
-//		    				if (numNodes > maxNodes)
-//		    				{
-//		    					maxNodes = numNodes;
-//		    				}
-//		    			}
-		    			
-//		    			System.out.println(" Max Child Nodes of level " + currentLevel + "=" + maxNodes);
-		    			
-//		    			maxChildNodesByLevel.put(currentLevel, maxNodes);
-		    			
-//		    			childNodesByParent = new LinkedHashMap<Integer, Integer>();	    			
-		    		}
-	    						    		
-	                float width = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f;
-	                float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f; 
-		    		float x = border + column * columnInterval;
-		    		float y = border + currentLevel * rowInterval;
-		    		
-		    		locations.put(node.getChildId(), new LocationNode(x, y));		    		
-		    		
-	                Rectangle r = new Rectangle();
-	                r.setX(x);
-	                r.setY(y);
-	                r.setWidth(width);
-	                r.setHeight(height);
-	                r.setArcWidth(20);
-	                r.setArcHeight(20);
-	                
-	                LocationNode parentLocation = locations.get(node.getParentId());
-	                
-	                Line line = new Line(
-	                		x + width / 2.0f, 
-	                		y + height / 2.0f, 
-	                		parentLocation.getX() + width / 2.0f, 
-	                		parentLocation.getY() + height / 2.0f);
-	                
-	                Group lineGroup = new Group(line);
+	@Override
+	public void start(Stage primaryStage) 
+	{
+		ObjectMapper mapper = new ObjectMapper();
 
-	                
-	                Text text = new Text();
-	                text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
-	                text.setText(Integer.toString(node.getChildId()));
-	                text.setX(x);
-	                text.setY(y + height * 0.75f);
-	                text.setFill(Color.BEIGE);
-	                Group textGroup = new Group(text);	                
-	                
-	                Text textData = new Text();
-	                textData.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
-	                textData.setText(node.getData());
-	                textData.setX(x);
-	                textData.setY(y + height * 0.75f);
-	                textData.setFill(Color.GREEN);
-	                textData.setRotate(90.0f);
-	                Group textDataGroup = new Group(textData);	              	               	              	             
-	                
-	                if (node.getData().compareTo("<epsilon>") == 0)
-	                {
-	                	r.setFill(Color.rgb(0, 0, 0, 0.95));
-	                }
-	                else
-	                {
-	                	if (node.getNumChildren() == 0)
-	                	{
-	                		r.setFill(Color.rgb(255, 0, 0, 0.95));
-	                	}
-	                	else
-	                	{
-	                		r.setFill(Color.rgb(0, 0, 255, 0.95));	                		
-	                	}
-	                }
+		sceneWidth = 1250;
+		sceneHeight = 1250;
+		List<TreeTableNode> treeTableNodes = null;
 
-	                root.getChildren().add(r);	                
-	                root.getChildren().add(lineGroup);
+		try 
+		{
+			InputStream fileInputStream = new FileInputStream("C:\\ProjectUmami\\data\\tree.json");
+			treeTableNodes = Arrays.asList(mapper.readValue(fileInputStream, TreeTableNode[].class));
+			fileInputStream.close();
 
-	                root.getChildren().add(textGroup);
-	                root.getChildren().add(textDataGroup);
-	                //line.toBack();
-	                lineGroup.toBack();
-	                
-//		    		Integer parent = childNodesByParent.get(node.getParentId());
-		    		
-//		    		System.out.println(" parent = " + parent + " node.getParentId() " + node.getParentId());
-		    		
-//		    		if (parent == null)
-//		    		{
-//		    			childNodesByParent.put(node.getParentId(), 1);
-//		    		}
-//		    		else
-//		    		{
-//		    			int numChildren = childNodesByParent.get(node.getParentId());
-		    			
-//		    			childNodesByParent.put(node.getParentId(), numChildren + 1);
-//		    			System.out.println("Changing " + node.getParentId() + " from " + numChildren + " to " + (numChildren + 1));
-//		    		}
-//	    		}
-		    		
-	                column++;
-	    	}
-	    	
-//	    	for (Integer key : maxChildNodesByLevel.keySet())
-//	    	{
-//	    		System.out.println("Key: " + key + " Value: " + maxChildNodesByLevel.get(key));	    		
-//	    	}	    	
+			for (TreeTableNode treeTableNode : treeTableNodes) 
+			{
+				System.out.println(treeTableNode.toString());
+			}
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
 
-  	
-    	
-    	
-    	
+		int previousLevel = -1;
+		int numLevels = 0;
+		int maxColumns = 0;
 
-/*
-        ArcTo arcTo = new ArcTo(); // ArcTo is set separately due to its complexity
-        arcTo.setRadiusX(250);
-        arcTo.setRadiusY(90);
-        arcTo.setX(50);
-        arcTo.setY(100);
-        arcTo.setSweepFlag(true);
-        System.out.println(arcTo.getXAxisRotation());
+		int columns = 0;
 
-        Path path = new Path(
-                new MoveTo(0, 0),
-                new HLineTo(50),
-                arcTo,
-                new VLineTo(150),
-                new HLineTo(0),
-                new ClosePath()
-        );
+		for (TreeTableNode node : treeTableNodes) 
+		{
+			numLevels = node.getLevel();
 
-        SVGPath svgPath = new SVGPath();
-        svgPath.setContent("M0,0 H50 A250,90 0 0,1 50,100 V150 H0 Z");
-        // M - move, H - horizontal line, A - arc, V - vertical line, Z - close path
-        svgPath.setFill(Color.DARKGREY);
+			if (previousLevel != numLevels) 
+			{
+				previousLevel = numLevels;
 
-        HBox root = new HBox(30, path, svgPath);
-        root.setPadding(new Insets(20));
+				if (columns > maxColumns) 
+				{
+					maxColumns = columns;
+				}
 
-        primaryStage.setTitle("Paths");
-        primaryStage.setScene(new Scene(root, 300, 250));
-        primaryStage.show();
- */
+				columns = 0;
+			} 
+			else 
+			{
+				columns++;
+			}
+		}
 
-/*
-        for (int column = 0; column < numColumns; column++)
-        {
-            for (int row = 0; row < numRows; row++)
-            {
-                Rectangle r = new Rectangle();
-                r.setX(column * columnInterval);
-                r.setY(row * rowInterval/);
-                r.setWidth(((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f);
-                r.setHeight(((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f);
-                r.setArcWidth(20);
-                r.setArcHeight(20);
-                r.setFill(Color.rgb(0, 0, 255, 1.0));
+		Pane root = new Pane();
+		int border = 10;
 
-                root.getChildren().addAll(r);
-            }
-        }
-*/
+		float rowInterval = sceneHeight / (numLevels + 1);
+		float columnInterval = sceneWidth / (maxColumns + 1);
 
-        Scene scene = new Scene(root, sceneWidth, sceneHeight);
+		previousLevel = -1;
+		int currentLevel = 0;
 
-        primaryStage.setTitle("Treeviewer");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+		int column = 0;
 
+		for (TreeTableNode node : treeTableNodes) 
+		{
+			currentLevel = node.getLevel();
 
-/*
-        Rectangle rect1 = new Rectangle(150, 50);
-        rect1.setArcHeight(10);
-        rect1.setArcWidth(10);
-        rect1.setFill(Color.BLUE);
+			if (previousLevel != currentLevel) 
+			{
+				column = 0;
 
-        Rectangle rect2 = new Rectangle(150, 50);
-        rect2.setArcHeight(10);
-        rect2.setArcWidth(10);
-        rect2.setFill(Color.RED);
+				previousLevel = currentLevel;
+			}
 
+			float width = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f;
+			float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f;
+			float x = border + column * columnInterval;
+			float y = border + currentLevel * rowInterval;
 
-        Circle circle = new Circle(50);
-        circle.setFill(Color.DARKGREY);
+			locations.put(node.getChildId(), new LocationNode(x, y));
 
-        Ellipse ellipse = new Ellipse();
-        ellipse.setRadiusX(60);
-        ellipse.setRadiusY(40);
-        ellipse.setFill(Color.DARKGREY);
+			Rectangle r = new Rectangle();
+			r.setX(x);
+			r.setY(y);
+			r.setWidth(width);
+			r.setHeight(height);
+			r.setArcWidth(20);
+			r.setArcHeight(20);
 
-        Polygon polygon = new Polygon();
-        polygon.setFill(Color.DARKGREY);
-        polygon.getPoints().addAll(
-                0.0, 0.0,
-                50.0, 30.0,
-                10.0, 60.0);
+			LocationNode parentLocation = locations.get(node.getParentId());
 
+			Line line = new Line(x + width / 2.0f, y + height / 2.0f, parentLocation.getX() + width / 2.0f,
+					parentLocation.getY() + height / 2.0f);
 
+			Group lineGroup = new Group(line);
 
-        HBox hbox = new HBox(20);
-        hbox.setPadding(new Insets(20));
-        hbox.setAlignment(Pos.CENTER);
-        hbox.getChildren().addAll(rect1, rect2);
+			Text text = new Text();
+			text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
+			text.setText(Integer.toString(node.getChildId()));
+			text.setX(x);
+			text.setY(y + height * 0.75f);
+			text.setFill(Color.BEIGE);
+			Group textGroup = new Group(text);
 
-        primaryStage.setTitle("Closed Shapes");
-        primaryStage.setScene(new Scene(hbox, 500, 500));
-        primaryStage.show();
+			Text textData = new Text();
+			textData.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
+			textData.setText(node.getData());
+			textData.setX(x);
+			textData.setY(y + height * 0.75f);
+			textData.setFill(Color.GREEN);
+			textData.setRotate(90.0f);
+			Group textDataGroup = new Group(textData);
 
- */
+			if (node.getData().compareTo("<epsilon>") == 0) 
+			{
+				r.setFill(Color.rgb(0, 0, 0, 0.95));
+			} 
+			else 
+			{
+				if (node.getNumChildren() == 0) 
+				{
+					r.setFill(Color.rgb(255, 0, 0, 0.95));
+				} 
+				else 
+				{
+					r.setFill(Color.rgb(0, 0, 255, 0.95));
+				}
+			}
 
-/*
-        Text txt = new Text("Hello\nJavaFX!");
-        txt.setFont(Font.font("Courier New", FontWeight.BOLD, FontPosture.ITALIC, 30));
+			root.getChildren().add(r);
+			root.getChildren().add(lineGroup);
 
-        Stop[] stops = new Stop[]{new Stop(0, Color.BLACK), new Stop(1, Color.DARKGRAY), new Stop(0.5, Color.ANTIQUEWHITE)};
-        LinearGradient gradient = new LinearGradient(50, 50, 250, 50, false, CycleMethod.NO_CYCLE, stops);
-        txt.setFill(gradient);
+			root.getChildren().add(textGroup);
+			root.getChildren().add(textDataGroup);
 
-        Text txt1 = new Text("Text1");
-        txt1.setFont(Font.font("Courier New", 15));
-        Text txt2 = new Text("Text2");
-        txt2.setFont(Font.font("Times New Roman", 20));
-        Text txt3 = new Text("Text3");
-        txt3.setFont(Font.font("Arial", 30));
-        TextFlow textFlow = new TextFlow(txt1, txt2, txt3);
+			lineGroup.toBack();
 
-        VBox root = new VBox(30, txt, textFlow);
-        root.setPadding(new Insets(20));
-        Scene scene = new Scene(root, 300, 250);
-        primaryStage.setTitle("Hello World!");
-        primaryStage.setScene(scene);
-        primaryStage.show();
- */
+			column++;
+		}
 
+		Scene scene = new Scene(root, sceneWidth, sceneHeight);
 
+		primaryStage.setTitle("Treeviewer");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
 
+	static void setRoot(String fxml) throws IOException 
+	{
+		scene.setRoot(loadFXML(fxml));
+	}
 
-/*
-        FlowPane root = new FlowPane(20, 40);
-        root.setPadding(new Insets(20));
-        for (StrokeLineJoin value : StrokeLineJoin.values()) {
-            Path path = newPath();
-            path.setStrokeLineJoin(value);
-            root.getChildren().add(new VBox(10, new Text(value.name()), path));
-        }
+	private static Parent loadFXML(String fxml) throws IOException 
+	{
+		FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+		return fxmlLoader.load();
+	}
 
-        primaryStage.setTitle("Dashes");
-        primaryStage.setScene(new Scene(root, 400, 250));
-        primaryStage.show();
- */
+	public static void main(String[] args) 
+	{
+		launch();
+	}
 
-/*
-        Rectangle shape = new Rectangle(400, 100);
-        shape.setFill(Color.WHITE);
-
-        shape.setStroke(Color.RED);
-        shape.setStrokeWidth(10);
-        shape.setStrokeType(StrokeType.CENTERED);
-
-        shape.setStrokeDashOffset(20);
-        shape.getStrokeDashArray().addAll(100.0, 50.0);
-        shape.setStrokeLineCap(StrokeLineCap.BUTT);
-        shape.setStrokeLineJoin(StrokeLineJoin.MITER);
-        shape.setStrokeMiterLimit(0);
-
-        StackPane root = new StackPane();
-        root.getChildren().add(shape);
-
-        Scene scene = new Scene(root, 600, 250);
-
-        primaryStage.setTitle("Hello World!");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-*/
-    }
-
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
-    }
-
-    public static void main(String[] args) {
-        launch();
-    }
-
-    private Path newPath() {
-        Path path = new Path(
-                new MoveTo(0, 0), new HLineTo(100),
-                new LineTo(70, 30), new ClosePath());
-        path.setStroke(Color.DARKGRAY);
-        path.setStrokeWidth(10);
-        return path;
-    }
+	private Path newPath() 
+	{
+		Path path = new Path(new MoveTo(0, 0), new HLineTo(100), new LineTo(70, 30), new ClosePath());
+		path.setStroke(Color.DARKGRAY);
+		path.setStrokeWidth(10);
+		return path;
+	}
 
 }
