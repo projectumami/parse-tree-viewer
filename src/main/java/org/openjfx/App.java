@@ -39,90 +39,159 @@ public class App extends Application {
     {    	
     	ObjectMapper mapper = new ObjectMapper();
     	
+        sceneWidth = 1000;
+        sceneHeight = 1000;
+        List<TreeTableNode> treeTableNodes = null;
+        
     	try
     	{
 	    	InputStream fileInputStream = new FileInputStream("C:\\ProjectUmami\\data\\tree.json");
-	    	List<TreeTableNode> treeTableNodes = Arrays.asList(mapper.readValue(fileInputStream, TreeTableNode[].class));
+	    	treeTableNodes = Arrays.asList(mapper.readValue(fileInputStream, TreeTableNode[].class));
 	    	fileInputStream.close();
-	    
+	  	    	
 	    	for (TreeTableNode treeTableNode : treeTableNodes)
 	    	{
 	    		System.out.println(treeTableNode.toString());
 	    	}
+    	}
+    	catch (Exception e)
+    	{
+    		e.printStackTrace();
+    	}  
+	    
+    	int previousLevel = -1;
+    	int numLevels = 0;
+    	int maxColumns = 0;
+    	
+    	int columns = 0;
+    	
+    	for (TreeTableNode node : treeTableNodes)
+    	{ 
+    		numLevels = node.getLevel();    		
+    			
+	    	if (previousLevel != numLevels)
+	    	{    	
+	    		previousLevel = numLevels;
+	    		
+	    		if (columns > maxColumns)
+	    		{
+	    			maxColumns = columns;
+	    		}
+	    		
+	    		columns = 0;
+	    	}
+	    	else
+	    	{
+	    		columns++;
+	    	}
+    	}
 	    	
-	    	LinkedHashMap<Integer, Integer> maxChildNodesByLevel = new LinkedHashMap<Integer, Integer>();
+        Pane root = new Pane();
+        int border = 10;
+        
+//        int numColumns = 50;
+        float rowInterval = sceneHeight / (numLevels + 1);
+        float columnInterval = sceneWidth / (maxColumns + 1);
+        
+//	    	LinkedHashMap<Integer, Integer> maxChildNodesByLevel = new LinkedHashMap<Integer, Integer>();
 	    	
-	    	int previousLevel = 0;
-	    	int currentLevel = 1;
+	    	previousLevel = -1;
+	    	int currentLevel = 0;
 	    	
-	    	LinkedHashMap<Integer, Integer> childNodesByParent = new LinkedHashMap<Integer, Integer>();
+//	    	LinkedHashMap<Integer, Integer> childNodesByParent = new LinkedHashMap<Integer, Integer>();
+	    	
+//	    	int row = 0;
+	    	int column = 0;
 	    	
 	    	for (TreeTableNode node : treeTableNodes)
 	    	{ 
-	    		if (node.getLevel() > 0) 
-	    		{
+//	    		if (node.getLevel() > 0) 
+//	    		{
 	    			currentLevel = node.getLevel();
 	    			
 	    			System.out.println("Current Level = " + currentLevel);
 	    			
 		    		if (previousLevel != currentLevel)
 		    		{
+		    			column = 0;
 		    			System.out.println();
 		    			
 		    			previousLevel = currentLevel;
 		    			
-		    			int maxNodes = 0;
+//		    			int maxNodes = 0;
 		    			
 		    			// Find the max child count in the current level.
-		    			for (Integer numNodes : childNodesByParent.values())
-		    			{
-		    				if (numNodes > maxNodes)
-		    				{
-		    					maxNodes = numNodes;
-		    				}
-		    			}
+//		    			for (Integer numNodes : childNodesByParent.values())
+//		    			{
+//		    				if (numNodes > maxNodes)
+//		    				{
+//		    					maxNodes = numNodes;
+//		    				}
+//		    			}
 		    			
-		    			System.out.println(" Max Child Nodes of level " + currentLevel + "=" + maxNodes);
+//		    			System.out.println(" Max Child Nodes of level " + currentLevel + "=" + maxNodes);
 		    			
-		    			maxChildNodesByLevel.put(currentLevel, maxNodes);
+//		    			maxChildNodesByLevel.put(currentLevel, maxNodes);
 		    			
-		    			childNodesByParent = new LinkedHashMap<Integer, Integer>();	    			
+//		    			childNodesByParent = new LinkedHashMap<Integer, Integer>();	    			
 		    		}
 	    				
-		    		Integer parent = childNodesByParent.get(node.getParentId());
+	                Rectangle r = new Rectangle();
+	                r.setX(border + column * columnInterval);
+	                r.setY(border + currentLevel * rowInterval);
+	                r.setWidth(((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f);
+	                r.setHeight(((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f);
+	                r.setArcWidth(20);
+	                r.setArcHeight(20);
+	                
+	                if (node.getData().compareTo("<epsilon>") == 0)
+	                {
+	                	r.setFill(Color.rgb(0, 0, 0, 1.0));
+	                }
+	                else
+	                {
+	                	if (node.getNumChildren() == 0)
+	                	{
+	                		r.setFill(Color.rgb(255, 0, 0, 1.0));
+	                	}
+	                	else
+	                	{
+	                		r.setFill(Color.rgb(0, 0, 255, 1.0));	                		
+	                	}
+	                }
+	                
+	                root.getChildren().addAll(r);
+	                
+//		    		Integer parent = childNodesByParent.get(node.getParentId());
 		    		
-		    		System.out.println(" parent = " + parent + " node.getParentId() " + node.getParentId());
+//		    		System.out.println(" parent = " + parent + " node.getParentId() " + node.getParentId());
 		    		
-		    		if (parent == null)
-		    		{
-		    			childNodesByParent.put(node.getParentId(), 1);
-		    		}
-		    		else
-		    		{
-		    			int numChildren = childNodesByParent.get(node.getParentId());
+//		    		if (parent == null)
+//		    		{
+//		    			childNodesByParent.put(node.getParentId(), 1);
+//		    		}
+//		    		else
+//		    		{
+//		    			int numChildren = childNodesByParent.get(node.getParentId());
 		    			
-		    			childNodesByParent.put(node.getParentId(), numChildren + 1);
-		    			System.out.println("Changing " + node.getParentId() + " from " + numChildren + " to " + (numChildren + 1));
-		    		}
-	    		}
+//		    			childNodesByParent.put(node.getParentId(), numChildren + 1);
+//		    			System.out.println("Changing " + node.getParentId() + " from " + numChildren + " to " + (numChildren + 1));
+//		    		}
+//	    		}
+		    		
+	                column++;
 	    	}
 	    	
-	    	for (Integer key : maxChildNodesByLevel.keySet())
-	    	{
-	    		System.out.println("Key: " + key + " Value: " + maxChildNodesByLevel.get(key));	    		
-	    	}
-	    	
+//	    	for (Integer key : maxChildNodesByLevel.keySet())
+//	    	{
+//	    		System.out.println("Key: " + key + " Value: " + maxChildNodesByLevel.get(key));	    		
+//	    	}	    	
 
-    	}
-    	catch (Exception e)
-    	{
-    		e.printStackTrace();
-    	}    	
+  	
     	
     	
     	
-        sceneWidth = 1000;
-        sceneHeight = 500;
+
 /*
         ArcTo arcTo = new ArcTo(); // ArcTo is set separately due to its complexity
         arcTo.setRadiusX(250);
@@ -153,20 +222,15 @@ public class App extends Application {
         primaryStage.setScene(new Scene(root, 300, 250));
         primaryStage.show();
  */
-        Pane root = new Pane();
 
-        int numRows = 7;
-        int numColumns = 25;
-        float rowInterval = sceneHeight / numRows;
-        float columnInterval = sceneWidth / numColumns;
-
+/*
         for (int column = 0; column < numColumns; column++)
         {
             for (int row = 0; row < numRows; row++)
             {
                 Rectangle r = new Rectangle();
-                r.setX(column * columnInterval /* + columnInterval / 2 */);
-                r.setY(row * rowInterval /* - rowInterval / 2 */);
+                r.setX(column * columnInterval);
+                r.setY(row * rowInterval/);
                 r.setWidth(((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f);
                 r.setHeight(((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f);
                 r.setArcWidth(20);
@@ -176,10 +240,11 @@ public class App extends Application {
                 root.getChildren().addAll(r);
             }
         }
+*/
 
         Scene scene = new Scene(root, sceneWidth, sceneHeight);
 
-        primaryStage.setTitle("Color Demo");
+        primaryStage.setTitle("Treeviewer");
         primaryStage.setScene(scene);
         primaryStage.show();
 

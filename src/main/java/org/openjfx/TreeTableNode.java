@@ -6,18 +6,20 @@ public class TreeTableNode
 	private int parentId;
 	private int childId;
 	private String data;
+	private int numChildren;
 	
 	public TreeTableNode()
 	{
 		
 	}
 	
-	public TreeTableNode(int level, int parentId, int childId, String data) 
+	public TreeTableNode(int level, int parentId, int childId, String data, int numChildren) 
 	{
 		this.level = level;
 		this.parentId = parentId;
 		this.childId = childId;
 		this.data = data;
+		this.numChildren = numChildren;
 	}
 
 	public int getParentId() {
@@ -47,7 +49,7 @@ public class TreeTableNode
 	@Override
 	public String toString()
 	{
-		return "(" + this.level + "," + this.parentId + "," + this.childId + "," + this.data + ")";
+		return "(" + this.level + "," + this.parentId + "," + this.childId + "," + this.data + "," + this.numChildren + ")";
 	}
 
 	public int getLevel() {
@@ -56,5 +58,13 @@ public class TreeTableNode
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public int getNumChildren() {
+		return numChildren;
+	}
+
+	public void setNumChildren(int numChildren) {
+		this.numChildren = numChildren;
 	}
 }
