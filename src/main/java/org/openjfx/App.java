@@ -23,6 +23,7 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -40,8 +41,8 @@ public class App extends Application
     {    	
     	ObjectMapper mapper = new ObjectMapper();
     	
-        sceneWidth = 1000;
-        sceneHeight = 1000;
+        sceneWidth = 1250;
+        sceneHeight = 1250;
         List<TreeTableNode> treeTableNodes = null;
         
     	try
@@ -162,23 +163,30 @@ public class App extends Application
 	                
 	                Group lineGroup = new Group(line);
 	                
+	                Text text = new Text();
+	                text.setText(Integer.toString(node.getChildId()));
+	                text.setX(x);
+	                text.setY(y + height * 0.75f);
+	                
+	                Group textGroup = new Group(text);	                
+	                
 	                if (node.getData().compareTo("<epsilon>") == 0)
 	                {
-	                	r.setFill(Color.rgb(0, 0, 0, 1.0));
+	                	r.setFill(Color.rgb(0, 0, 0, 0.5));
 	                }
 	                else
 	                {
 	                	if (node.getNumChildren() == 0)
 	                	{
-	                		r.setFill(Color.rgb(255, 0, 0, 1.0));
+	                		r.setFill(Color.rgb(255, 0, 0, 0.5));
 	                	}
 	                	else
 	                	{
-	                		r.setFill(Color.rgb(0, 0, 255, 1.0));	                		
+	                		r.setFill(Color.rgb(0, 0, 255, 0.5));	                		
 	                	}
 	                }
 	                
-	                root.getChildren().addAll(lineGroup, r);
+	                root.getChildren().addAll(lineGroup, r, textGroup);
 	                
 //		    		Integer parent = childNodesByParent.get(node.getParentId());
 		    		
