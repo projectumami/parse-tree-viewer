@@ -4,21 +4,21 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ClosePath;
 import javafx.scene.shape.HLineTo;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -28,11 +28,12 @@ import javafx.stage.Stage;
 /**
  * JavaFX App
  */
-public class App extends Application {
-
+public class App extends Application 
+{
     private static Scene scene;
     private int sceneWidth;
     private int sceneHeight;
+    private HashMap<Integer, LocationNode> locations = new HashMap<Integer, LocationNode>();
 
     @Override
     public void start(Stage primaryStage)
@@ -109,12 +110,12 @@ public class App extends Application {
 //	    		{
 	    			currentLevel = node.getLevel();
 	    			
-	    			System.out.println("Current Level = " + currentLevel);
+//	    			System.out.println("Current Level = " + currentLevel);
 	    			
 		    		if (previousLevel != currentLevel)
 		    		{
 		    			column = 0;
-		    			System.out.println();
+//		    			System.out.println();
 		    			
 		    			previousLevel = currentLevel;
 		    			
@@ -135,14 +136,31 @@ public class App extends Application {
 		    			
 //		    			childNodesByParent = new LinkedHashMap<Integer, Integer>();	    			
 		    		}
-	    				
+	    						    		
+	                float width = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f;
+	                float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f; 
+		    		float x = border + column * columnInterval;
+		    		float y = border + currentLevel * rowInterval;
+		    		
+		    		locations.put(node.getChildId(), new LocationNode(x, y));		    		
+		    		
 	                Rectangle r = new Rectangle();
-	                r.setX(border + column * columnInterval);
-	                r.setY(border + currentLevel * rowInterval);
-	                r.setWidth(((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f);
-	                r.setHeight(((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f);
+	                r.setX(x);
+	                r.setY(y);
+	                r.setWidth(width);
+	                r.setHeight(height);
 	                r.setArcWidth(20);
 	                r.setArcHeight(20);
+	                
+	                LocationNode parentLocation = locations.get(node.getParentId());
+	                
+	                Line line = new Line(
+	                		x + width / 2.0f, 
+	                		y + height / 2.0f, 
+	                		parentLocation.getX() + width / 2.0f, 
+	                		parentLocation.getY() + height / 2.0f);
+	                
+	                Group lineGroup = new Group(line);
 	                
 	                if (node.getData().compareTo("<epsilon>") == 0)
 	                {
@@ -160,7 +178,7 @@ public class App extends Application {
 	                	}
 	                }
 	                
-	                root.getChildren().addAll(r);
+	                root.getChildren().addAll(lineGroup, r);
 	                
 //		    		Integer parent = childNodesByParent.get(node.getParentId());
 		    		
