@@ -23,6 +23,9 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -162,31 +165,39 @@ public class App extends Application
 	                		parentLocation.getY() + height / 2.0f);
 	                
 	                Group lineGroup = new Group(line);
+
 	                
 	                Text text = new Text();
+	                text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
 	                text.setText(Integer.toString(node.getChildId()));
 	                text.setX(x);
 	                text.setY(y + height * 0.75f);
+	                text.setFill(Color.BEIGE);
 	                
 	                Group textGroup = new Group(text);	                
 	                
 	                if (node.getData().compareTo("<epsilon>") == 0)
 	                {
-	                	r.setFill(Color.rgb(0, 0, 0, 0.5));
+	                	r.setFill(Color.rgb(0, 0, 0, 1.0));
 	                }
 	                else
 	                {
 	                	if (node.getNumChildren() == 0)
 	                	{
-	                		r.setFill(Color.rgb(255, 0, 0, 0.5));
+	                		r.setFill(Color.rgb(255, 0, 0, 1.0));
 	                	}
 	                	else
 	                	{
-	                		r.setFill(Color.rgb(0, 0, 255, 0.5));	                		
+	                		r.setFill(Color.rgb(0, 0, 255, 1.0));	                		
 	                	}
 	                }
-	                
-	                root.getChildren().addAll(lineGroup, r, textGroup);
+
+	                root.getChildren().add(r);	                
+	                root.getChildren().add(lineGroup);
+
+	                root.getChildren().add(textGroup);
+	                //line.toBack();
+	                lineGroup.toBack();
 	                
 //		    		Integer parent = childNodesByParent.get(node.getParentId());
 		    		
