@@ -113,6 +113,12 @@ public class App extends Application
 				previousLevel = currentLevel;
 			}
 
+			Group lineGroup = null;
+			Group textGroup = null;
+			Group textDataGroup = null;
+			Rectangle r = null;
+			
+/*
 			float width = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f;
 			float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f;
 			float x = border + column * columnInterval;
@@ -138,45 +144,100 @@ public class App extends Application
 			Text text = new Text();
 			text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
 			text.setText(Integer.toString(node.getChildId()));
-			text.setX(x);
-			text.setY(y + height * 0.75f);
+			text.setX(x + width * 0.1f);
+			text.setY(y + height * 0.5f);
 			text.setFill(Color.BEIGE);
 			Group textGroup = new Group(text);
+*/			
 
-			Text textData = new Text();
-			textData.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
-			textData.setText(node.getData());
-			textData.setX(x);
-			textData.setY(y + height * 0.75f);
-			textData.setFill(Color.GREEN);
-			textData.setRotate(90.0f);
-			Group textDataGroup = new Group(textData);
 
+		
 			if (node.getData().compareTo("<epsilon>") == 0) 
-			{
-				r.setFill(Color.rgb(0, 0, 0, 0.95));
+			{				
+//				r.setStrokeWidth(5.0);
+//				r.setStroke(Color.rgb(0, 255, 0, 0.90));
+//				r.setFill(Color.rgb(0, 0, 0, 0.90));
 			} 
 			else 
 			{
+				float width = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f;
+				float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f;
+				float x = border + column * columnInterval;
+				float y = border + currentLevel * rowInterval;
+
+				locations.put(node.getChildId(), new LocationNode(x, y));
+
+				r = new Rectangle();
+				r.setX(x);
+				r.setY(y);
+				r.setWidth(width);
+				r.setHeight(height);
+				r.setArcWidth(20);
+				r.setArcHeight(20);
+
+				LocationNode parentLocation = locations.get(node.getParentId());
+
+				Line line = new Line(x + width / 2.0f, y + height / 2.0f, parentLocation.getX() + width / 2.0f,
+						parentLocation.getY() + height / 2.0f);
+
+				lineGroup = new Group(line);
+
+				Text text = new Text();
+				text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
+				text.setText(Integer.toString(node.getChildId()));
+				text.setX(x + width * 0.1f);
+				text.setY(y + height * 0.5f);
+				text.setFill(Color.BEIGE);
+				textGroup = new Group(text);
+				
+				Text textData = new Text();
+				textData.setFont(Font.font("verdana", FontWeight.THIN, FontPosture.REGULAR, 10));
+				textData.setText(node.getData());
+				textData.setX(x + width * 0.1f);
+				textData.setY(y + height * 0.75f);
+				textData.setFill(Color.BEIGE);
+				textDataGroup = new Group(textData);
+				
 				if (node.getNumChildren() == 0) 
 				{
-					r.setFill(Color.rgb(255, 0, 0, 0.95));
+					r.setStrokeWidth(5.0);					
+					r.setStroke(Color.rgb(0, 255, 0, 0.90));					
+					r.setFill(Color.rgb(255, 0, 0, 0.90));
 				} 
 				else 
 				{
-					r.setFill(Color.rgb(0, 0, 255, 0.95));
+					r.setFill(Color.rgb(0, 0, 255, 0.90));
 				}
+				
+				column++;
 			}
 
-			root.getChildren().add(r);
-			root.getChildren().add(lineGroup);
+			if (r != null)
+			{
+				root.getChildren().add(r);
+			}
+			
+			if (lineGroup != null)
+			{
+				root.getChildren().add(lineGroup);
+			}
 
-			root.getChildren().add(textGroup);
-			root.getChildren().add(textDataGroup);
+			if (textGroup != null)
+			{
+				root.getChildren().add(textGroup);
+			}
+			
+			if (textDataGroup != null)
+			{
+				root.getChildren().add(textDataGroup);
+			}
 
-			lineGroup.toBack();
+			if (lineGroup != null)
+			{
+				lineGroup.toBack();
+			}
 
-			column++;
+
 		}
 
 		Scene scene = new Scene(root, sceneWidth, sceneHeight);
