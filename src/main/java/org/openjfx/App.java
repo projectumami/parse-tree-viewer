@@ -34,13 +34,17 @@ public class App extends Application
 	private static Scene scene;
 	private int sceneWidth = 1750;
 	private int sceneHeight = 1250;
-	private HashMap<Integer, LocationNode> locations = new HashMap<Integer, LocationNode>();
+	private HashMap<Integer, LocationNode> locations = 
+		new HashMap<Integer, LocationNode>();
+	
 	private List<TreeTableNode> treeTableNodes = null;
 	private float rowInterval = 0.0f;
 	private float columnInterval = 0.0f;
 	private HashMap<Integer, HashMap<Integer, Integer>> adjacencyMatrix =
 		new HashMap<Integer, HashMap<Integer, Integer>>();
-	private HashMap<Integer, TreeTableNode> lookupTable = new HashMap<Integer, TreeTableNode>();
+	
+	private HashMap<Integer, TreeTableNode> lookupTable = 
+		new HashMap<Integer, TreeTableNode>();
 	
 	/**
 	 * 
@@ -104,7 +108,7 @@ public class App extends Application
 		*/
 
 		Pane root = new Pane();
-		int border = 10;
+		int border = 5;
 
 		int previousLevel = -1;
 		int currentLevel = 0;
@@ -130,16 +134,14 @@ public class App extends Application
 
 			Color nodeColor = Color.rgb(0, 0, 200, 0.90);
 			
-/*			
+			
 			int myId = node.getChildId();
 			HashMap<Integer, Integer> myChildren = adjacencyMatrix.get(myId);
-//			System.err.println("My ID: " + myId);
 			
 			if (myChildren != null)
 			{
 				if (myChildren.keySet().size() == 1)
 				{
-//					System.err.println("1 child");
 					Set<Integer> children = myChildren.keySet();
 					
 					Iterator<Integer> it = children.iterator(); 
@@ -148,38 +150,22 @@ public class App extends Application
 					{
 						Integer childId = it.next();
 						
-						System.err.println("Child ID: " + childId);
-						System.err.println("Child Data: " + lookupTable.get(childId).getData());
-						
-						
-						if (lookupTable.get(childId).getData().compareTo("<epsilon>") == 0)
-						{
-//							System.err.println("continue");
-							continue;
-						}
-						else
-						{
-							HashMap<Integer, Integer> childsChildren = adjacencyMatrix.get(childId);
+						HashMap<Integer, Integer> childsChildren = adjacencyMatrix.get(childId);
 							
-							if (childsChildren == null)
+						if (childsChildren == null)
+						{
 							{
-//								if (childsChildren.keySet().size() == 0)
-								{
-									nodeColor = Color.rgb(0, 200, 0, 0.90);		
-								}
+								nodeColor = Color.rgb(0, 200, 0, 1.0);		
 							}							
 						}	
 					}
 				}
 			}
 			
-			if (node.getData().compareTo("<epsilon>") == 0)
-			{
-				continue;
-			}
-*/			
+
 			
-			float width = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .95f;
+			
+			float width = columnInterval * 0.75f; // ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .95f;
 			float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .55f;
 			float x = border + column * columnInterval;
 			float y = border + currentLevel * rowInterval;
@@ -201,6 +187,8 @@ public class App extends Application
 					y, 
 					parentLocation.getX() + width / 2.0f,
 					parentLocation.getY() + height);
+			
+			line.setStrokeWidth(1.0f);
 
 			lineGroup = new Group(line);
 
@@ -220,11 +208,20 @@ public class App extends Application
 			textData.setFill(Color.BEIGE);
 			textDataGroup = new Group(textData);
 			
+			r.setStrokeWidth(2.0);	
+			r.setStroke(Color.GRAY);
+			
 			if (node.getNumChildren() == 0 &&
 				node.getChildId() != 0) 
 			{
-				r.setStrokeWidth(2.0);								
-				r.setFill(Color.rgb(255, 0, 0, 0.90));
+				if (node.getData().compareTo("<epsilon>") == 0)
+				{
+					r.setFill(Color.rgb(25, 25, 25, 1.0));
+				}				
+				else
+				{
+					r.setFill(Color.rgb(255, 0, 0, 1.0));
+				}
 			} 
 			else 
 			{
@@ -355,10 +352,10 @@ public class App extends Application
 			} 
 			else 
 			{
-				if (node.getData().compareTo("<epsilon>") != 0)
-				{
+//				if (node.getData().compareTo("<epsilon>") != 0)
+//				{
 					columns++;
-				}
+//				}
 			}
 		}		
 		
