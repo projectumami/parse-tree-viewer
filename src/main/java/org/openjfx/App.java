@@ -45,69 +45,24 @@ public class App extends Application
 	private List<TreeTableNode> treeTableNodes = null;
 	private float rowInterval = 0.0f;
 	private float columnInterval = 0.0f;
-	
-	private void createModel()
+
+	/**
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) 
 	{
-		ObjectMapper mapper = new ObjectMapper();
-		
-		try 
-		{
-			InputStream fileInputStream = new FileInputStream("C:\\ProjectUmami\\data\\tree.json");
-			treeTableNodes = Arrays.asList(mapper.readValue(fileInputStream, TreeTableNode[].class));
-			fileInputStream.close();
-
-			for (TreeTableNode treeTableNode : treeTableNodes) 
-			{
-				System.out.println(treeTableNode.toString());
-			}
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}	
-		
-		int previousLevel = -1;
-		int numLevels = 0;
-		int maxColumns = 0;
-
-		int columns = 0;
-
-		for (TreeTableNode node : treeTableNodes) 
-		{
-			numLevels = node.getLevel();
-
-			if (previousLevel != numLevels) 
-			{
-				previousLevel = numLevels;
-
-				if (columns > maxColumns) 
-				{
-					maxColumns = columns;
-				}
-
-				columns = 0;
-			} 
-			else 
-			{
-				if (node.getData().compareTo("<epsilon>") != 0)
-				{
-					columns++;
-				}
-			}
-		}		
-		
-		rowInterval = sceneHeight / (numLevels + 1);
-		columnInterval = sceneWidth / (maxColumns + 1);
+		launch();
 	}
 	
+	/**
+	 * 
+	 */
 	@Override
 	public void start(Stage primaryStage) 
 	{
 		createModel();
-
-
-
-
+		createMatrix();
 
 /*		
 		Button btnRemoveEpsilons = new Button("Hide Epsilons");
@@ -304,19 +259,90 @@ public class App extends Application
 		primaryStage.show();
 	}
 
+	/**
+	 * 
+	 * @param fxml
+	 * @throws IOException
+	 */
 	static void setRoot(String fxml) throws IOException 
 	{
 		scene.setRoot(loadFXML(fxml));
 	}
 
+	/**
+	 * 
+	 * @param fxml
+	 * @return
+	 * @throws IOException
+	 */
 	private static Parent loadFXML(String fxml) throws IOException 
 	{
 		FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
 		return fxmlLoader.load();
 	}
 
-	public static void main(String[] args) 
+	/**
+	 * 
+	 */
+	private void createMatrix()
 	{
-		launch();
+		
 	}
+	
+	/**
+	 * 
+	 */
+	private void createModel()
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		
+		try 
+		{
+			InputStream fileInputStream = new FileInputStream("C:\\ProjectUmami\\data\\tree.json");
+			treeTableNodes = Arrays.asList(mapper.readValue(fileInputStream, TreeTableNode[].class));
+			fileInputStream.close();
+
+			for (TreeTableNode treeTableNode : treeTableNodes) 
+			{
+				System.out.println(treeTableNode.toString());
+			}
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}	
+		
+		int previousLevel = -1;
+		int numLevels = 0;
+		int maxColumns = 0;
+
+		int columns = 0;
+
+		for (TreeTableNode node : treeTableNodes) 
+		{
+			numLevels = node.getLevel();
+
+			if (previousLevel != numLevels) 
+			{
+				previousLevel = numLevels;
+
+				if (columns > maxColumns) 
+				{
+					maxColumns = columns;
+				}
+
+				columns = 0;
+			} 
+			else 
+			{
+				if (node.getData().compareTo("<epsilon>") != 0)
+				{
+					columns++;
+				}
+			}
+		}		
+		
+		rowInterval = sceneHeight / (numLevels + 1);
+		columnInterval = sceneWidth / (maxColumns + 1);
+	}	
 }
