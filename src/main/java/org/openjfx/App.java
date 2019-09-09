@@ -11,9 +11,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ClosePath;
@@ -35,19 +39,17 @@ import javafx.stage.Stage;
 public class App extends Application 
 {
 	private static Scene scene;
-	private int sceneWidth;
-	private int sceneHeight;
+	private int sceneWidth = 1250;
+	private int sceneHeight = 1250;
 	private HashMap<Integer, LocationNode> locations = new HashMap<Integer, LocationNode>();
-
-	@Override
-	public void start(Stage primaryStage) 
+	private List<TreeTableNode> treeTableNodes = null;
+	private float rowInterval = 0.0f;
+	private float columnInterval = 0.0f;
+	
+	private void createModel()
 	{
 		ObjectMapper mapper = new ObjectMapper();
-
-		sceneWidth = 1250;
-		sceneHeight = 1250;
-		List<TreeTableNode> treeTableNodes = null;
-
+		
 		try 
 		{
 			InputStream fileInputStream = new FileInputStream("C:\\ProjectUmami\\data\\tree.json");
@@ -62,8 +64,63 @@ public class App extends Application
 		catch (Exception e) 
 		{
 			e.printStackTrace();
-		}
+		}	
+		
+		int previousLevel = -1;
+		int numLevels = 0;
+		int maxColumns = 0;
 
+		int columns = 0;
+
+		for (TreeTableNode node : treeTableNodes) 
+		{
+			numLevels = node.getLevel();
+
+			if (previousLevel != numLevels) 
+			{
+				previousLevel = numLevels;
+
+				if (columns > maxColumns) 
+				{
+					maxColumns = columns;
+				}
+
+				columns = 0;
+			} 
+			else 
+			{
+				if (node.getData().compareTo("<epsilon>") != 0)
+				{
+					columns++;
+				}
+			}
+		}		
+		
+		rowInterval = sceneHeight / (numLevels + 1);
+		columnInterval = sceneWidth / (maxColumns + 1);
+	}
+	
+	@Override
+	public void start(Stage primaryStage) 
+	{
+		createModel();
+
+
+
+
+
+/*		
+		Button btnRemoveEpsilons = new Button("Hide Epsilons");
+		btnRemoveEpsilons.setStyle("-fx-background-color: darkslateblue); -fx-text-fill: white;");
+		GridPane root = new GridPane();
+		root.setMinSize(1250, 1250);
+		root.setPadding(new Insets(10, 10, 10, 10));
+		root.setVgap(5);
+		root.setHgap(5);
+		root.setAlignment(Pos.TOP_CENTER);
+		root.add(btnRemoveEpsilons, 0, 2);
+*/		
+		/*
 		int previousLevel = -1;
 		int numLevels = 0;
 		int maxColumns = 0;
@@ -93,14 +150,12 @@ public class App extends Application
 				}
 			}
 		}
+		*/
 
 		Pane root = new Pane();
 		int border = 10;
 
-		float rowInterval = sceneHeight / (numLevels + 1);
-		float columnInterval = sceneWidth / (maxColumns + 1);
-
-		previousLevel = -1;
+		int previousLevel = -1;
 		int currentLevel = 0;
 
 		int column = 0;
@@ -164,7 +219,7 @@ public class App extends Application
 			else 
 			{
 				float width = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .95f;
-				float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f;
+				float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .55f;
 				float x = border + column * columnInterval;
 				float y = border + currentLevel * rowInterval;
 
@@ -197,13 +252,14 @@ public class App extends Application
 				textData.setFont(Font.font("verdana", FontWeight.THIN, FontPosture.REGULAR, 10));
 				textData.setText(node.getData());
 				textData.setX(x + width * 0.05f);
-				textData.setY(y + height * 0.7f);
+				textData.setY(y + height * 0.75f);
 				textData.setFill(Color.BEIGE);
 				textDataGroup = new Group(textData);
 				
-				if (node.getNumChildren() == 0) 
+				if (node.getNumChildren() == 0 &&
+					node.getChildId() != 0) 
 				{
-					r.setStrokeWidth(2.5);					
+					r.setStrokeWidth(2.0);					
 					r.setStroke(Color.rgb(0, 255, 0, 0.90));					
 					r.setFill(Color.rgb(255, 0, 0, 0.90));
 				} 
@@ -239,8 +295,6 @@ public class App extends Application
 			{
 				lineGroup.toBack();
 			}
-
-
 		}
 
 		Scene scene = new Scene(root, sceneWidth, sceneHeight);
@@ -265,13 +319,4 @@ public class App extends Application
 	{
 		launch();
 	}
-
-	private Path newPath() 
-	{
-		Path path = new Path(new MoveTo(0, 0), new HLineTo(100), new LineTo(70, 30), new ClosePath());
-		path.setStroke(Color.DARKGRAY);
-		path.setStrokeWidth(10);
-		return path;
-	}
-
 }
