@@ -32,7 +32,7 @@ import javafx.stage.Stage;
 public class App extends Application 
 {
 	private static Scene scene;
-	private int sceneWidth = 1250;
+	private int sceneWidth = 1750;
 	private int sceneHeight = 1250;
 	private HashMap<Integer, LocationNode> locations = new HashMap<Integer, LocationNode>();
 	private List<TreeTableNode> treeTableNodes = null;
@@ -41,7 +41,7 @@ public class App extends Application
 	private HashMap<Integer, HashMap<Integer, Integer>> adjacencyMatrix =
 		new HashMap<Integer, HashMap<Integer, Integer>>();
 	private HashMap<Integer, TreeTableNode> lookupTable = new HashMap<Integer, TreeTableNode>();
-
+	
 	/**
 	 * 
 	 * @param args
@@ -126,50 +126,20 @@ public class App extends Application
 			Group textGroup = null;
 			Group textDataGroup = null;
 			Rectangle r = null;
-			
-/*
-			float width = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f;
-			float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .75f;
-			float x = border + column * columnInterval;
-			float y = border + currentLevel * rowInterval;
-
-			locations.put(node.getChildId(), new LocationNode(x, y));
-
-			Rectangle r = new Rectangle();
-			r.setX(x);
-			r.setY(y);
-			r.setWidth(width);
-			r.setHeight(height);
-			r.setArcWidth(20);
-			r.setArcHeight(20);
-
-			LocationNode parentLocation = locations.get(node.getParentId());
-
-			Line line = new Line(x + width / 2.0f, y + height / 2.0f, parentLocation.getX() + width / 2.0f,
-					parentLocation.getY() + height / 2.0f);
-
-			Group lineGroup = new Group(line);
-
-			Text text = new Text();
-			text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
-			text.setText(Integer.toString(node.getChildId()));
-			text.setX(x + width * 0.1f);
-			text.setY(y + height * 0.5f);
-			text.setFill(Color.BEIGE);
-			Group textGroup = new Group(text);
-*/			
+						
 
 			Color nodeColor = Color.rgb(0, 0, 200, 0.90);
 			
+/*			
 			int myId = node.getChildId();
 			HashMap<Integer, Integer> myChildren = adjacencyMatrix.get(myId);
-			System.err.println("My ID: " + myId);
+//			System.err.println("My ID: " + myId);
 			
 			if (myChildren != null)
 			{
 				if (myChildren.keySet().size() == 1)
 				{
-					System.err.println("1 child");
+//					System.err.println("1 child");
 					Set<Integer> children = myChildren.keySet();
 					
 					Iterator<Integer> it = children.iterator(); 
@@ -184,7 +154,7 @@ public class App extends Application
 						
 						if (lookupTable.get(childId).getData().compareTo("<epsilon>") == 0)
 						{
-							System.err.println("continue");
+//							System.err.println("continue");
 							continue;
 						}
 						else
@@ -207,6 +177,7 @@ public class App extends Application
 			{
 				continue;
 			}
+*/			
 			
 			float width = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .95f;
 			float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .55f;
@@ -225,8 +196,11 @@ public class App extends Application
 
 			LocationNode parentLocation = locations.get(node.getParentId());
 
-			Line line = new Line(x + width / 2.0f, y + height / 2.0f, parentLocation.getX() + width / 2.0f,
-					parentLocation.getY() + height / 2.0f);
+			Line line = new Line(
+					x + width / 2.0f, 
+					y, 
+					parentLocation.getX() + width / 2.0f,
+					parentLocation.getY() + height);
 
 			lineGroup = new Group(line);
 
@@ -249,13 +223,12 @@ public class App extends Application
 			if (node.getNumChildren() == 0 &&
 				node.getChildId() != 0) 
 			{
-				r.setStrokeWidth(2.0);					
-//				r.setStroke(Color.rgb(0, 255, 0, 0.90));					
+				r.setStrokeWidth(2.0);								
 				r.setFill(Color.rgb(255, 0, 0, 0.90));
 			} 
 			else 
 			{
-				r.setFill(nodeColor); // Color.rgb(0, 0, 200, 0.90));
+				r.setFill(nodeColor); 
 			}
 			
 			column++;
