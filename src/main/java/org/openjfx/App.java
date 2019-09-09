@@ -159,6 +159,8 @@ public class App extends Application
 			Group textGroup = new Group(text);
 */			
 
+			Color nodeColor = Color.rgb(0, 0, 200, 0.90);
+			
 			int myId = node.getChildId();
 			HashMap<Integer, Integer> myChildren = adjacencyMatrix.get(myId);
 			System.err.println("My ID: " + myId);
@@ -170,17 +172,33 @@ public class App extends Application
 					System.err.println("1 child");
 					Set<Integer> children = myChildren.keySet();
 					
-					for (Iterator<Integer> it = children.iterator(); it.hasNext(); )
+					Iterator<Integer> it = children.iterator(); 
+					
+					if (it.hasNext())					
 					{
 						Integer childId = it.next();
 						
 						System.err.println("Child ID: " + childId);
+						System.err.println("Child Data: " + lookupTable.get(childId).getData());
+						
 						
 						if (lookupTable.get(childId).getData().compareTo("<epsilon>") == 0)
 						{
-							System.err.println("Child Data: " + lookupTable.get(childId).getData());
+							System.err.println("continue");
 							continue;
 						}
+						else
+						{
+							HashMap<Integer, Integer> childsChildren = adjacencyMatrix.get(childId);
+							
+							if (childsChildren == null)
+							{
+//								if (childsChildren.keySet().size() == 0)
+								{
+									nodeColor = Color.rgb(0, 200, 0, 0.90);		
+								}
+							}							
+						}	
 					}
 				}
 			}
@@ -232,12 +250,12 @@ public class App extends Application
 				node.getChildId() != 0) 
 			{
 				r.setStrokeWidth(2.0);					
-				r.setStroke(Color.rgb(0, 255, 0, 0.90));					
+//				r.setStroke(Color.rgb(0, 255, 0, 0.90));					
 				r.setFill(Color.rgb(255, 0, 0, 0.90));
 			} 
 			else 
 			{
-				r.setFill(Color.rgb(0, 0, 200, 0.90));
+				r.setFill(nodeColor); // Color.rgb(0, 0, 200, 0.90));
 			}
 			
 			column++;
