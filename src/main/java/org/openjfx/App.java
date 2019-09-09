@@ -5,27 +5,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ClosePath;
-import javafx.scene.shape.HLineTo;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -45,6 +38,9 @@ public class App extends Application
 	private List<TreeTableNode> treeTableNodes = null;
 	private float rowInterval = 0.0f;
 	private float columnInterval = 0.0f;
+	private HashMap<Integer, HashMap<Integer, Integer>> adjacencyMatrix =
+		new HashMap<Integer, HashMap<Integer, Integer>>();
+	private HashMap<Integer, TreeTableNode> lookupTable = new HashMap<Integer, TreeTableNode>();
 
 	/**
 	 * 
@@ -163,68 +159,88 @@ public class App extends Application
 			Group textGroup = new Group(text);
 */			
 
+			int myId = node.getChildId();
+			HashMap<Integer, Integer> myChildren = adjacencyMatrix.get(myId);
+			System.err.println("My ID: " + myId);
+			
+			if (myChildren != null)
+			{
+				if (myChildren.keySet().size() == 1)
+				{
+					System.err.println("1 child");
+					Set<Integer> children = myChildren.keySet();
+					
+					for (Iterator<Integer> it = children.iterator(); it.hasNext(); )
+					{
+						Integer childId = it.next();
+						
+						System.err.println("Child ID: " + childId);
+						
+						if (lookupTable.get(childId).getData().compareTo("<epsilon>") == 0)
+						{
+							System.err.println("Child Data: " + lookupTable.get(childId).getData());
+							continue;
+						}
+					}
+				}
+			}
+			
+			if (node.getData().compareTo("<epsilon>") == 0)
+			{
+				continue;
+			}
+			
+			float width = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .95f;
+			float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .55f;
+			float x = border + column * columnInterval;
+			float y = border + currentLevel * rowInterval;
 
-		
-			if (node.getData().compareTo("<epsilon>") == 0) 
-			{				
-//				r.setStrokeWidth(5.0);
-//				r.setStroke(Color.rgb(0, 255, 0, 0.90));
-//				r.setFill(Color.rgb(0, 0, 0, 0.90));
+			locations.put(node.getChildId(), new LocationNode(x, y));
+
+			r = new Rectangle();
+			r.setX(x);
+			r.setY(y);
+			r.setWidth(width);
+			r.setHeight(height);
+			r.setArcWidth(10);
+			r.setArcHeight(10);
+
+			LocationNode parentLocation = locations.get(node.getParentId());
+
+			Line line = new Line(x + width / 2.0f, y + height / 2.0f, parentLocation.getX() + width / 2.0f,
+					parentLocation.getY() + height / 2.0f);
+
+			lineGroup = new Group(line);
+
+			Text text = new Text();
+			text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
+			text.setText(Integer.toString(node.getChildId()));
+			text.setX(x + width * 0.05f);
+			text.setY(y + height * 0.4f);
+			text.setFill(Color.YELLOW);
+			textGroup = new Group(text);
+			
+			Text textData = new Text();
+			textData.setFont(Font.font("verdana", FontWeight.THIN, FontPosture.REGULAR, 10));
+			textData.setText(node.getData());
+			textData.setX(x + width * 0.05f);
+			textData.setY(y + height * 0.75f);
+			textData.setFill(Color.BEIGE);
+			textDataGroup = new Group(textData);
+			
+			if (node.getNumChildren() == 0 &&
+				node.getChildId() != 0) 
+			{
+				r.setStrokeWidth(2.0);					
+				r.setStroke(Color.rgb(0, 255, 0, 0.90));					
+				r.setFill(Color.rgb(255, 0, 0, 0.90));
 			} 
 			else 
 			{
-				float width = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .95f;
-				float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .55f;
-				float x = border + column * columnInterval;
-				float y = border + currentLevel * rowInterval;
-
-				locations.put(node.getChildId(), new LocationNode(x, y));
-
-				r = new Rectangle();
-				r.setX(x);
-				r.setY(y);
-				r.setWidth(width);
-				r.setHeight(height);
-				r.setArcWidth(10);
-				r.setArcHeight(10);
-
-				LocationNode parentLocation = locations.get(node.getParentId());
-
-				Line line = new Line(x + width / 2.0f, y + height / 2.0f, parentLocation.getX() + width / 2.0f,
-						parentLocation.getY() + height / 2.0f);
-
-				lineGroup = new Group(line);
-
-				Text text = new Text();
-				text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
-				text.setText(Integer.toString(node.getChildId()));
-				text.setX(x + width * 0.05f);
-				text.setY(y + height * 0.4f);
-				text.setFill(Color.YELLOW);
-				textGroup = new Group(text);
-				
-				Text textData = new Text();
-				textData.setFont(Font.font("verdana", FontWeight.THIN, FontPosture.REGULAR, 10));
-				textData.setText(node.getData());
-				textData.setX(x + width * 0.05f);
-				textData.setY(y + height * 0.75f);
-				textData.setFill(Color.BEIGE);
-				textDataGroup = new Group(textData);
-				
-				if (node.getNumChildren() == 0 &&
-					node.getChildId() != 0) 
-				{
-					r.setStrokeWidth(2.0);					
-					r.setStroke(Color.rgb(0, 255, 0, 0.90));					
-					r.setFill(Color.rgb(255, 0, 0, 0.90));
-				} 
-				else 
-				{
-					r.setFill(Color.rgb(0, 0, 200, 0.90));
-				}
-				
-				column++;
+				r.setFill(Color.rgb(0, 0, 200, 0.90));
 			}
+			
+			column++;
 
 			if (r != null)
 			{
@@ -286,7 +302,18 @@ public class App extends Application
 	 */
 	private void createMatrix()
 	{
-		
+		for (TreeTableNode node : treeTableNodes)
+		{
+			HashMap<Integer, Integer> parent = adjacencyMatrix.get(node.getParentId());
+			
+			if (parent == null)
+			{
+				adjacencyMatrix.put(node.getParentId(), new HashMap<Integer, Integer>());
+				parent = adjacencyMatrix.get(node.getParentId());				
+			}
+			
+			parent.put(node.getChildId(), 1);			
+		}
 	}
 	
 	/**
@@ -305,6 +332,8 @@ public class App extends Application
 			for (TreeTableNode treeTableNode : treeTableNodes) 
 			{
 				System.out.println(treeTableNode.toString());
+				
+				lookupTable.put(treeTableNode.getChildId(), treeTableNode);
 			}
 		} 
 		catch (Exception e) 
