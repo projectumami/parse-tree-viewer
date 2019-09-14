@@ -1,4 +1,4 @@
-package org.openjfx;
+package project.umami;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -64,49 +64,6 @@ public class App extends Application
 		createModel();
 		createMatrix();
 
-/*		
-		Button btnRemoveEpsilons = new Button("Hide Epsilons");
-		btnRemoveEpsilons.setStyle("-fx-background-color: darkslateblue); -fx-text-fill: white;");
-		GridPane root = new GridPane();
-		root.setMinSize(1250, 1250);
-		root.setPadding(new Insets(10, 10, 10, 10));
-		root.setVgap(5);
-		root.setHgap(5);
-		root.setAlignment(Pos.TOP_CENTER);
-		root.add(btnRemoveEpsilons, 0, 2);
-*/		
-		/*
-		int previousLevel = -1;
-		int numLevels = 0;
-		int maxColumns = 0;
-
-		int columns = 0;
-
-		for (TreeTableNode node : treeTableNodes) 
-		{
-			numLevels = node.getLevel();
-
-			if (previousLevel != numLevels) 
-			{
-				previousLevel = numLevels;
-
-				if (columns > maxColumns) 
-				{
-					maxColumns = columns;
-				}
-
-				columns = 0;
-			} 
-			else 
-			{
-				if (node.getData().compareTo("<epsilon>") != 0)
-				{
-					columns++;
-				}
-			}
-		}
-		*/
-
 		Pane root = new Pane();
 		int border = 5;
 
@@ -163,9 +120,8 @@ public class App extends Application
 			}
 			
 
-			
-			
-			float width = columnInterval * 0.75f; // ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .95f;
+						
+			float width = columnInterval * 0.75f; 
 			float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .55f;
 			float x = border + column * columnInterval;
 			float y = border + currentLevel * rowInterval;

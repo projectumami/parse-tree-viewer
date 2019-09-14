@@ -5,6 +5,6 @@ module treeviewer {
 	requires com.fasterxml.jackson.core;
 	requires javafx.graphics;
 
-    opens org.openjfx to javafx.fxml;
-    exports org.openjfx;
+    opens project.umami to javafx.fxml;
+    exports project.umami;
 }

@@ -1,4 +1,4 @@
-package org.openjfx;
+package project.umami;
 
 import java.io.IOException;
 import javafx.fxml.FXML;
