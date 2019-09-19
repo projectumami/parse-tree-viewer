@@ -9,3 +9,6 @@ Place a valid parse tree json file in your filesystem at the location specified 
 
 <h2>Compilation</h2>
 To run, enter this on the command line: mvn clean compile package javafx:run
+
+<h2>Contact</h2>
+For more information, contact inquiries@orchidwarestudios.com.
