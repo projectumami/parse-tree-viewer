@@ -42,7 +42,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
- * JavaFX App
+ * Parse Tree visualization
+ * 
+ * To compile and run: 
+ * 		mvn clean compile javafx:run
  */
 public class App extends Application 
 {
@@ -103,7 +106,7 @@ public class App extends Application
 			Group textDataGroup = null;
 			Rectangle r = null;
 						
-
+			// Internal nodes
 			Color nodeColor = Color.rgb(0, 0, 200, 0.90);
 			
 			
@@ -126,9 +129,8 @@ public class App extends Application
 							
 						if (childsChildren == null)
 						{
-							{
-								nodeColor = Color.rgb(0, 200, 0, 1.0);		
-							}							
+							// Node immediately above a leaf.
+							nodeColor = Color.rgb(0, 200, 0, 1.0);									
 						}	
 					}
 				}
@@ -187,10 +189,12 @@ public class App extends Application
 			{
 				if (node.getData().compareTo("<epsilon>") == 0)
 				{
+					// Epsilon node
 					r.setFill(Color.rgb(25, 25, 25, 1.0));
 				}				
 				else
 				{
+					// Leaf node
 					r.setFill(Color.rgb(255, 0, 0, 1.0));
 				}
 			} 

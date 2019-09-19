@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>project.umami</groupId>
-    <artifactId>treeviewer</artifactId>
+    <artifactId>parsetreeviewer</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -42,9 +42,9 @@
                 <version>0.0.3</version>
                 <configuration>
                     <release>12</release>
-                    <jlinkImageName>treeviewer</jlinkImageName>
-                    <launcher>treeviewer</launcher>
-                    <mainClass>treeviewer/project.umami.App</mainClass>
+                    <jlinkImageName>parsetreeviewer</jlinkImageName>
+                    <launcher>parsetreeviewer</launcher>
+                    <mainClass>parsetreeviewer/project.umami.App</mainClass>
                 </configuration>
             </plugin>
         </plugins>
