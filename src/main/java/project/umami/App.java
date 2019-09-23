@@ -31,6 +31,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -104,6 +105,9 @@ public class App extends Application
 			Group lineGroup = null;
 			Group textGroup = null;
 			Group textDataGroup = null;
+			Group moleculeGroup = null;
+			Group moleculeLabelGroup = null;
+			
 			Rectangle r = null;
 						
 			// Internal nodes
@@ -136,7 +140,17 @@ public class App extends Application
 				}
 			}
 			
-
+			ChoiceBox<String> moleculeChoiceBox = new ChoiceBox();
+			moleculeChoiceBox.getItems().addAll(
+					"Ciprofloxacin",
+					"Aspirin",
+					"Penicillin");
+			
+			moleculeGroup = new Group(moleculeChoiceBox);
+			
+			Text moleculeLabel = new Text("Molecule:"); 
+			moleculeLabel.setStyle("-fx-font: normal bold 15px 'serif'");
+			moleculeLabelGroup = new Group(moleculeLabelGroup);
 						
 			float width = columnInterval * 0.75f; 
 			float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .55f;
@@ -208,6 +222,16 @@ public class App extends Application
 			if (r != null)
 			{
 				root.getChildren().add(r);
+			}
+			
+			if (moleculeGroup != null)
+			{
+				root.getChildren().add(moleculeGroup);
+			}
+			
+			if (moleculeLabelGroup != null)
+			{
+				root.getChildren().add(moleculeLabelGroup);
 			}
 			
 			if (lineGroup != null)
