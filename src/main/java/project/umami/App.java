@@ -28,10 +28,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -105,8 +107,6 @@ public class App extends Application
 			Group lineGroup = null;
 			Group textGroup = null;
 			Group textDataGroup = null;
-			Group moleculeGroup = null;
-			Group moleculeLabelGroup = null;
 			
 			Rectangle r = null;
 						
@@ -140,17 +140,7 @@ public class App extends Application
 				}
 			}
 			
-			ChoiceBox<String> moleculeChoiceBox = new ChoiceBox();
-			moleculeChoiceBox.getItems().addAll(
-					"Ciprofloxacin",
-					"Aspirin",
-					"Penicillin");
-			
-			moleculeGroup = new Group(moleculeChoiceBox);
-			
-			Text moleculeLabel = new Text("Molecule:"); 
-			moleculeLabel.setStyle("-fx-font: normal bold 15px 'serif'");
-			moleculeLabelGroup = new Group(moleculeLabelGroup);
+
 						
 			float width = columnInterval * 0.75f; 
 			float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .55f;
@@ -219,20 +209,15 @@ public class App extends Application
 			
 			column++;
 
+			
+
+			
 			if (r != null)
 			{
 				root.getChildren().add(r);
 			}
 			
-			if (moleculeGroup != null)
-			{
-				root.getChildren().add(moleculeGroup);
-			}
-			
-			if (moleculeLabelGroup != null)
-			{
-				root.getChildren().add(moleculeLabelGroup);
-			}
+
 			
 			if (lineGroup != null)
 			{
@@ -256,8 +241,36 @@ public class App extends Application
 		}
 
 		Scene scene = new Scene(root, sceneWidth, sceneHeight);
+		
+		Group moleculeGroup = null;
+		Group moleculeLabelGroup = null;
+		
+		ChoiceBox<String> moleculeChoiceBox = new ChoiceBox();
+		moleculeChoiceBox.getItems().addAll(
+				"Ciprofloxacin",
+				"Aspirin",
+				"Penicillin");
+		
+		moleculeGroup = new Group(moleculeChoiceBox);
+		
+		Text moleculeLabel = new Text("Molecule:"); 
+		moleculeLabel.setStyle("-fx-font: normal bold 15px 'serif'");
+		moleculeLabelGroup = new Group(moleculeLabel);		
+		
+		GridPane gridPane = new GridPane();
+		gridPane.setAlignment(Pos.TOP_LEFT);
+		
+		if (moleculeGroup != null)
+		{
+			gridPane.add(moleculeGroup, 0, 0);
+		}
+		
+		if (moleculeLabelGroup != null)
+		{
+			gridPane.add(moleculeLabelGroup, 1, 0);
+		}		
 
-		primaryStage.setTitle("Treeviewer");
+		primaryStage.setTitle("SMILES Parse Tree Viewer");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
