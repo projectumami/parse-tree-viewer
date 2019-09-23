@@ -66,6 +66,9 @@ public class App extends Application
 	
 	private HashMap<Integer, TreeTableNode> lookupTable = 
 		new HashMap<Integer, TreeTableNode>();
+
+	Pane treePane = new Pane();	
+	GridPane gridPane = new GridPane();
 	
 	/**
 	 * 
@@ -85,191 +88,18 @@ public class App extends Application
 		createModel();
 		createMatrix();
 
-		Pane root = new Pane();
-		int border = 5;
-
-		int previousLevel = -1;
-		int currentLevel = 0;
-
-		int column = 0;
-
-		for (TreeTableNode node : treeTableNodes) 
-		{
-			currentLevel = node.getLevel();
-
-			if (previousLevel != currentLevel) 
-			{
-				column = 0;
-
-				previousLevel = currentLevel;
-			}
-
-			Group lineGroup = null;
-			Group textGroup = null;
-			Group textDataGroup = null;
-			
-			Rectangle r = null;
-						
-			// Internal nodes
-			Color nodeColor = Color.rgb(0, 0, 200, 0.90);
-			
-			
-			int myId = node.getChildId();
-			HashMap<Integer, Integer> myChildren = adjacencyMatrix.get(myId);
-			
-			if (myChildren != null)
-			{
-				if (myChildren.keySet().size() == 1)
-				{
-					Set<Integer> children = myChildren.keySet();
-					
-					Iterator<Integer> it = children.iterator(); 
-					
-					if (it.hasNext())					
-					{
-						Integer childId = it.next();
-						
-						HashMap<Integer, Integer> childsChildren = adjacencyMatrix.get(childId);
-							
-						if (childsChildren == null)
-						{
-							// Node immediately above a leaf.
-							nodeColor = Color.rgb(0, 200, 0, 1.0);									
-						}	
-					}
-				}
-			}
-			
-
-						
-			float width = columnInterval * 0.75f; 
-			float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .55f;
-			float x = border + column * columnInterval;
-			float y = border + currentLevel * rowInterval;
-
-			locations.put(node.getChildId(), new LocationNode(x, y));
-
-			r = new Rectangle();
-			r.setX(x);
-			r.setY(y);
-			r.setWidth(width);
-			r.setHeight(height);
-			r.setArcWidth(10);
-			r.setArcHeight(10);
-
-			LocationNode parentLocation = locations.get(node.getParentId());
-
-			Line line = new Line(
-					x + width / 2.0f, 
-					y, 
-					parentLocation.getX() + width / 2.0f,
-					parentLocation.getY() + height);
-			
-			line.setStrokeWidth(1.0f);
-
-			lineGroup = new Group(line);
-
-			Text text = new Text();
-			text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
-			text.setText(Integer.toString(node.getChildId()));
-			text.setX(x + width * 0.05f);
-			text.setY(y + height * 0.4f);
-			text.setFill(Color.YELLOW);
-			textGroup = new Group(text);
-			
-			Text textData = new Text();
-			textData.setFont(Font.font("verdana", FontWeight.THIN, FontPosture.REGULAR, 10));
-			textData.setText(node.getData());
-			textData.setX(x + width * 0.05f);
-			textData.setY(y + height * 0.75f);
-			textData.setFill(Color.BEIGE);
-			textDataGroup = new Group(textData);
-			
-			r.setStrokeWidth(2.0);	
-			r.setStroke(Color.GRAY);
-			
-			if (node.getNumChildren() == 0 &&
-				node.getChildId() != 0) 
-			{
-				if (node.getData().compareTo("<epsilon>") == 0)
-				{
-					// Epsilon node
-					r.setFill(Color.rgb(25, 25, 25, 1.0));
-				}				
-				else
-				{
-					// Leaf node
-					r.setFill(Color.rgb(255, 0, 0, 1.0));
-				}
-			} 
-			else 
-			{
-				r.setFill(nodeColor); 
-			}
-			
-			column++;
-
-			
-
-			
-			if (r != null)
-			{
-				root.getChildren().add(r);
-			}
-			
-
-			
-			if (lineGroup != null)
-			{
-				root.getChildren().add(lineGroup);
-			}
-
-			if (textGroup != null)
-			{
-				root.getChildren().add(textGroup);
-			}
-			
-			if (textDataGroup != null)
-			{
-				root.getChildren().add(textDataGroup);
-			}
-
-			if (lineGroup != null)
-			{
-				lineGroup.toBack();
-			}
-		}
-
-		Scene scene = new Scene(root, sceneWidth, sceneHeight);
-		
-		Group moleculeGroup = null;
-		Group moleculeLabelGroup = null;
-		
-		ChoiceBox<String> moleculeChoiceBox = new ChoiceBox();
-		moleculeChoiceBox.getItems().addAll(
-				"Ciprofloxacin",
-				"Aspirin",
-				"Penicillin");
-		
-		moleculeGroup = new Group(moleculeChoiceBox);
-		
-		Text moleculeLabel = new Text("Molecule:"); 
-		moleculeLabel.setStyle("-fx-font: normal bold 15px 'serif'");
-		moleculeLabelGroup = new Group(moleculeLabel);		
-		
-		GridPane gridPane = new GridPane();
 		gridPane.setAlignment(Pos.TOP_LEFT);
 		
-		if (moleculeGroup != null)
-		{
-			gridPane.add(moleculeGroup, 0, 0);
-		}
+		createMoleculeSelectionPanel();
+		createTreePanel();
 		
-		if (moleculeLabelGroup != null)
-		{
-			gridPane.add(moleculeLabelGroup, 1, 0);
-		}		
-
+		gridPane.add(treePane, 0, 1, 2, 1);
+		
+		Scene scene = new Scene(
+				gridPane, 
+				sceneWidth, 
+				sceneHeight);
+		
 		primaryStage.setTitle("SMILES Parse Tree Viewer");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -370,5 +200,189 @@ public class App extends Application
 		
 		rowInterval = sceneHeight / (numLevels + 1);
 		columnInterval = sceneWidth / (maxColumns + 1);
-	}	
+	} 
+	
+	/**
+	 * 
+	 */
+	private void createTreePanel()
+	{
+		int border = 5;
+
+		int previousLevel = -1;
+		int currentLevel = 0;
+
+		int column = 0;
+		
+		for (TreeTableNode node : treeTableNodes) 
+		{
+			currentLevel = node.getLevel();
+
+			if (previousLevel != currentLevel) 
+			{
+				column = 0;
+
+				previousLevel = currentLevel;
+			}
+
+			Group lineGroup = null;
+			Group textGroup = null;
+			Group textDataGroup = null;
+			
+			Rectangle r = null;
+						
+			// Internal nodes
+			Color nodeColor = Color.rgb(0, 0, 200, 0.90);
+						
+			int myId = node.getChildId();
+			HashMap<Integer, Integer> myChildren = adjacencyMatrix.get(myId);
+			
+			if (myChildren != null)
+			{
+				if (myChildren.keySet().size() == 1)
+				{
+					Set<Integer> children = myChildren.keySet();
+					
+					Iterator<Integer> it = children.iterator(); 
+					
+					if (it.hasNext())					
+					{
+						Integer childId = it.next();
+						
+						HashMap<Integer, Integer> childsChildren = adjacencyMatrix.get(childId);
+							
+						if (childsChildren == null)
+						{
+							// Node immediately above a leaf.
+							nodeColor = Color.rgb(0, 200, 0, 1.0);									
+						}	
+					}
+				}
+			}
+						
+			float width = columnInterval * 0.75f; 
+			float height = ((columnInterval > rowInterval) ? rowInterval : columnInterval) * .55f;
+			float x = border + column * columnInterval;
+			float y = border + currentLevel * rowInterval;
+
+			locations.put(node.getChildId(), new LocationNode(x, y));
+
+			r = new Rectangle();
+			r.setX(x);
+			r.setY(y);
+			r.setWidth(width);
+			r.setHeight(height);
+			r.setArcWidth(10);
+			r.setArcHeight(10);
+
+			LocationNode parentLocation = locations.get(node.getParentId());
+
+			Line line = new Line(
+					x + width / 2.0f, 
+					y, 
+					parentLocation.getX() + width / 2.0f,
+					parentLocation.getY() + height);
+			
+			line.setStrokeWidth(1.0f);
+
+			lineGroup = new Group(line);
+
+			Text text = new Text();
+			text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10));
+			text.setText(Integer.toString(node.getChildId()));
+			text.setX(x + width * 0.05f);
+			text.setY(y + height * 0.4f);
+			text.setFill(Color.YELLOW);
+			textGroup = new Group(text);
+			
+			Text textData = new Text();
+			textData.setFont(Font.font("verdana", FontWeight.THIN, FontPosture.REGULAR, 10));
+			textData.setText(node.getData());
+			textData.setX(x + width * 0.05f);
+			textData.setY(y + height * 0.75f);
+			textData.setFill(Color.BEIGE);
+			textDataGroup = new Group(textData);
+			
+			r.setStrokeWidth(2.0);	
+			r.setStroke(Color.GRAY);
+			
+			if (node.getNumChildren() == 0 &&
+				node.getChildId() != 0) 
+			{
+				if (node.getData().compareTo("<epsilon>") == 0)
+				{
+					// Epsilon node
+					r.setFill(Color.rgb(25, 25, 25, 1.0));
+				}				
+				else
+				{
+					// Leaf node
+					r.setFill(Color.rgb(255, 0, 0, 1.0));
+				}
+			} 
+			else 
+			{
+				r.setFill(nodeColor); 
+			}
+			
+			column++;
+
+				
+			if (r != null)
+			{
+				treePane.getChildren().add(r);
+			}
+						
+			if (lineGroup != null)
+			{
+				treePane.getChildren().add(lineGroup);
+			}
+
+			if (textGroup != null)
+			{
+				treePane.getChildren().add(textGroup);
+			}
+			
+			if (textDataGroup != null)
+			{
+				treePane.getChildren().add(textDataGroup);
+			}
+
+			if (lineGroup != null)
+			{
+				lineGroup.toBack();
+			}	
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	private void createMoleculeSelectionPanel()
+	{
+		Group moleculeGroup = null;
+		Group moleculeLabelGroup = null;
+		
+		ChoiceBox<String> moleculeChoiceBox = new ChoiceBox();
+		moleculeChoiceBox.getItems().addAll(
+				"Ciprofloxacin",
+				"Aspirin",
+				"Penicillin");
+		
+		moleculeGroup = new Group(moleculeChoiceBox);
+		
+		Text moleculeLabel = new Text("Molecule:"); 
+		moleculeLabel.setStyle("-fx-font: normal bold 15px 'serif'");
+		moleculeLabelGroup = new Group(moleculeLabel);		
+		
+		if (moleculeLabelGroup != null)
+		{
+			gridPane.add(moleculeLabelGroup, 0, 0);
+		}
+		
+		if (moleculeGroup != null)
+		{
+			gridPane.add(moleculeGroup, 1, 0);
+		}		
+	}
 }
