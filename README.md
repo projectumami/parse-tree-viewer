@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="parsetree.PNG" width="750" title="Parse Tree Viewer">
+  <img src="parsetree.PNG" width="300" title="Parse Tree Viewer">
 </p>
 
 <h1>Parse Tree Viewer for JavaFX 12</h1>
